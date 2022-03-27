@@ -1,6 +1,8 @@
 <?php 
 namespace App\Service\Cart;
 
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
@@ -8,18 +10,24 @@ class CartService
 {
 
 
-    private SessionInterface $session;
+    protected $session;
 
 
-    public function __construct(SessionInterface $session)
+    public function __construct(RequestStack $requestStack)
     {
-        $this->session = $session;   
+        $this->session = $requestStack->getSession();   
     }
 
-    public function add($id)
+    public function add($data)
     {
-        $panier = $this->session->get('panier');
-        dd($panier);
+        $panier = $this->session->get('panier', []);
+        $panier[] = $data;
+        $this->session->set('panier', $panier);
+        dd($this->session);
     }
 
+    public function countCart() : int
+    {
+        return count($this->session->get('panier', []));
+    }
 }
