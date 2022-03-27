@@ -29,6 +29,7 @@
           <div class="dropdown-menu">
             {% if app.user %}
               <a class="dropdown-item" href="{{path('app_profil')}}">Votre profil</a>
+              <a class="dropdown-item" href="{{path('app_profil')}}">Vos commandes <span class="badge badge-primary">0</span></a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="{{path('app_logout')}}">Déconnexion</a>
             {% else %}
@@ -53,9 +54,6 @@
   </div>
 </nav>
 
-{% for alert in app.flashes('success') %}
-    <div class="alert alert-success alert-dismissible fade show" role="alert"> {{ alert }}</div>
-{% endfor %}
 
 
     {% block body %}{% endblock %}

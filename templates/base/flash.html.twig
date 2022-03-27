@@ -1,0 +1,12 @@
+{% for alert in app.flashes('success') %}
+<div class="container">
+    <div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Bravo :</strong> {{ alert }}</div>
+</div>
+{% endfor %}
+
+
+{% for alert in app.flashes('danger') %}
+<div class="container">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Attention :</strong> {{ alert }}</div>
+</div>
+{% endfor %}

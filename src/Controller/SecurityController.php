@@ -6,12 +6,14 @@ use App\Entity\Client;
 use App\Form\ClientUpdateFormType;
 use App\Form\RegistrationFormType;
 use App\Security\LogInAuthentificatorAuthenticator;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
@@ -37,10 +39,23 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/account/profil', name: 'app_profil')]
-    public function profil(): Response
-    {
-        $client = ($this->getUser());
-        $form = $this->createForm(ClientUpdateFormType::class, $client);
+    public function profil(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $userPasswordHasher): Response
+    {   
+
+        if(!($this->getUser())) return $this->redirectToRoute('app_home');
+        $form = $this->createForm(ClientUpdateFormType::class, $this->getUser());
+        $form->handleRequest($request);
+        $client = $this->getUser();
+        
+        if($form->isSubmitted() AND $form->isValid())
+        {
+            $user = ($form->getData());
+           
+            $em->persist($user);
+            $em->flush();
+            $this->addFlash("success", "Votre profil a bien été enregistré avec succès.");
+            return $this->redirectToRoute('app_home');
+        }
         return $this->render('account/profil.html.twig', [
             'client' => $client,
             'form' => $form->createView()

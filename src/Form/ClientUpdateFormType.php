@@ -32,7 +32,7 @@ class ClientUpdateFormType extends AbstractType
             ])
         ->add('mail', EmailType::class, [
             'attr' => [
-                'class' => 'form-control'
+                'class' => 'form-control',
             ],
             'label_attr' => [
                 'label_class' => 'form-label'
@@ -79,23 +79,10 @@ class ClientUpdateFormType extends AbstractType
                 'label_class' => 'form-label'
             ]
             ])
-        ->add('password', RepeatedType::class, [
-            'type' => PasswordType::class,
-            'first_options'=> [
-                'label'=>'Mot de passe',
-                'attr'=> ['class'=>'form-control'],
-                'label_attr' => ['label_class' => 'form-label']
-            ],
-            'second_options'=> [
-                'label' => 'Confirmation du mot de passe',
-                'attr' => ['class'=>'form-control'],
-                'label_attr' => ['label_class' => 'form-label']
-            ],
-            'invalid_message' => 'Les mots de passe ne correspondent pas'
-        ])
+        
         
         ->add('submit', SubmitType::class, [
-            'label' => 'Inscris-moi',
+            'label' => 'Sauvegarder votre profil',
             'attr' => [
                 'class'=>'btn btn-light',
             ]
