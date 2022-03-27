@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+
+<div class="jumbotron jumbotron-fluid" style=" border-bottom: 2px solid #343a40;">
+  <div class="container" style="text-align: center;">
+    <p class="lead">
+        Nous vous souhaitons la bienvenue sur notre site de vente en ligne de produits paramédicaux et bien-être
+à destination des particuliers.
+
+Avec plus de 2000 produits paramédicaux à la vente, GsbPara vous propose à un tarif compétitif un large panel de produits livré rapidement chez vous !</p>
+  </div>
+</div>
+
+<div class="container">
+<div class="card card-body">
+  <div class="row">
+    <div class="col-sm-4">
+  <div style="padding:3px;" class="card card-body">
+  <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="./assets/img/slider.png" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="https://weledaint-prod.global.ssl.fastly.net/binaries/content/gallery/global/headers/lead-plants/hd_rosemary.jpg/hd_rosemary.jpg/weledahippo%3Astagestatic1792x768" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="./assets/img/slider.png" class="d-block w-100" alt="...">
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+</div>
+    </div>
+    <div class="col-sm-8">
+
+  <nav aria-label="breadcrumb">
+     <ol class="breadcrumb">
+       <li class="breadcrumb-item"><a href="#">Accueil</a></li>
+       <li class="breadcrumb-item active" aria-current="page">Produits</li>
+     </ol>
+
+   </nav>
+
+
+
+
+  <div class="row">
+
+  {% for produit in products %}
+          <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100">
+              <center>
+              <a href="#"><img class="card-img-top" src="{{ produit.illustration }}" style="margin-top: 5px;text-align: center;height: 190px; width: 150px;" alt=""></a>
+              </center>
+              <div class="card-body">
+                <h5>{{ produit.nom }}</h5>
+                <p class="card-text">{{ produit.getResume() }}</p>
+                <a href="#"></a><button type="button" class="btn btn-sm btn-outline-secondary" href="allocine-details.html">Plus de détails</button>
+              </div>
+              <div class="card-footer">
+                <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+              </div>
+            </div>
+          </div>
+          
+{% endfor %}
+
+          </div>
+</div>
+
+
+</div>
+  </div>
+</div>
+
+
+
+</div>
+
+{% endblock %}

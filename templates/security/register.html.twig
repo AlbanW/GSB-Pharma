@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+<br>
+<br>
+<div class="container">
+<div class="center">
+
+    <div class="card card-body bg-dark text-white">
+    
+    {{form_errors(registrationForm)}}
+{{ form_start(registrationForm) }}
+
+        <div class="form-row">
+
+<div class="form-group col-md-6">
+
+             {{ form_row(registrationForm.mail) }}            
+</div>
+<div class="form-group col-md-6">
+             {{ form_row(registrationForm.nom) }}
+        </div>
+<div class="form-group col-md-6">
+             {{ form_row(registrationForm.prenom) }}   
+</div>
+        <div class="form-group col-md-6">
+             {{ form_row(registrationForm.adresse) }}   
+        </div>
+        
+<div class="form-group col-md-6">
+             {{ form_row(registrationForm.ville) }}   
+        </div>
+        
+<div class="form-group col-md-6">
+             {{ form_row(registrationForm.codePostal) }}   
+        </div>
+        
+<div class="form-group col-md-6">
+            
+             {{ form_row(registrationForm.telephone) }}   
+            </div>
+        <div class="form-group col-md-6">
+  
+             {{ form_row(registrationForm.password) }}   
+        </div>
+    
+        </div>
+
+        <div class="form-check">
+        {{ form_widget(registrationForm.acceptCgu, { 'attr': {'class': 'form-check-input'} }) }}
+        {{ form_label(registrationForm.acceptCgu, 'J\'ai lu et j\'accepte la Politique de Protection des Données', { 'attr': {'class': 'form-check-label'} }) }}
+
+        </div>
+        <div class="form-group">
+         <small  class="form-text text-muted">Vos informations personnelles ne sont stockés qu'as des fin d'identification et ne seront pas exploitées en dehors des services proposés.</small>
+        </div>
+
+        {{ form_row(registrationForm.submit)}}
+
+
+
+</div>
+{{ form_end(registrationForm) }}
+
+    </div>
+
+</div></div>
+<br>
+<br>
+<br>
+<br><br>
+
+{% endblock %}

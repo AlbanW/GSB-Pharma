@@ -1,0 +1,62 @@
+{% include '/base/header.html.twig' %}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+            <img style="width: 80px; height: 40px;" src="/assets/img/logo.png" alt="">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor02">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link active" href="{{ path('app_home') }}">Accueil
+            <span class="visually-hidden">(current)</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Nos produits</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Catégories</a>
+        </li>
+       
+      </ul>
+         <ul class="navbar-nav d-flex">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Espace membre</a>
+          <div class="dropdown-menu">
+            {% if app.user %}
+              <a class="dropdown-item" href="{{path('app_profil')}}">Votre profil</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{{path('app_logout')}}">Déconnexion</a>
+            {% else %}
+              <a class="dropdown-item" href="{{ path('app_login') }}">Je me connecte</a>
+              <a class="dropdown-item" href="{{ path('app_register') }}">Je m'inscrit</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Mot de passe oublié</a>
+            {% endif %}
+
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link" href="#">
+                <span class="badge rounded-pill bg-success">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag" viewBox="0 0 16 16">
+                    <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
+                </svg> (1)</span>
+            </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+{% for alert in app.flashes('success') %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert"> {{ alert }}</div>
+{% endfor %}
+
+
+    {% block body %}{% endblock %}
+{% include '/base/footer.html.twig' %}
