@@ -68,7 +68,7 @@ Avec plus de 2000 produits paramédicaux à la vente, GsbPara vous propose à un
               <div class="card-body">
                 <h5>{{ produit.nom }}</h5>
                 <p class="card-text">{{ produit.getResume() }}</p>
-                <a href="#"></a><button type="button" class="btn btn-sm btn-outline-secondary" href="allocine-details.html">Plus de détails</button>
+                <a href="{{ path('app_product_show', {'id': produit.id }) }}" class="btn btn-sm btn-outline-secondary" href="allocine-details.html">Plus de détails</a>
               </div>
               <div class="card-footer">
                 <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
