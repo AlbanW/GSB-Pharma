@@ -5,20 +5,104 @@
 {% block body %}
 
 {% include '/base/flash.html.twig' %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello ! ✅</h1>
-    {% for stock in produit.getStocks() %} 
-        {{dump(stock)}}
-    {% endfor %}
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/Alban/Desktop/Dev/gsbparam/src/Controller/ProductController.php'|file_link(0) }}">src/Controller/ProductController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/Alban/Desktop/Dev/gsbparam/templates/product/index.html.twig'|file_link(0) }}">templates/product/index.html.twig</a></code></li>
-    </ul>
-</div>
+<script>
+
+$(document).ready(function() {
+    qte = $('.qty').val()
+    id = $('#selectPrix').val()
+    $.ajax({
+        type: "POST",
+        url: "{{ path('app_ajax') }}",
+        data: {'id': id}
+    }).done(function(data){
+        var price = data['message'] * qte
+        $('.prixProduit').text(price.toFixed(2));
+    })
+});
+
+function updatePrice()
+{
+    qte = $('.qty').val()
+    id = $('#selectPrix').val()
+    console.log(qte);
+    $.ajax({
+        type: "POST",
+        url: "{{ path('app_ajax') }}",
+        data: {'id': id}
+    }).done(function(data){
+        var price = data['message'] * qte
+        $('.prixProduit').text(price.toFixed(2));
+    })
+}
+</script>
+
+	<div class="container"><br><br>
+        <div class="card card-body bg-dark text-white">
+	        <div class="row">
+	        	<div class="col-md-6">
+                     <img src="{{produit.getIllustration()}}" style="text-align: center;"width="400px" height="400px" >
+                </div>
+	        	<div class="col-md-6">
+	        		<div class="product-dtl">
+        				<div class="product-info">
+		        			<div class="product-name">{{ produit.getNom() }}</div>
+		        			<div class="reviews-counter">
+								<div class="rate">
+								    <input type="radio" id="star5" name="rate" value="5" checked />
+								    <label for="star5" title="text">5 stars</label>
+								    <input type="radio" id="star4" name="rate" value="4" checked />
+								    <label for="star4" title="text">4 stars</label>
+								    <input type="radio" id="star3" name="rate" value="3" checked />
+								    <label for="star3" title="text">3 stars</label>
+								    <input type="radio" id="star2" name="rate" value="2" />
+								    <label for="star2" title="text">2 stars</label>
+								    <input type="radio" id="star1" name="rate" value="1" />
+								    <label for="star1" title="text">1 star</label>
+								  </div>
+								<span>3 Reviews</span>
+							</div>
+		        		</div><br>
+	        			<p>{{produit.getDescription()}}</p>
+	        			<div class="row">
+	        				<div class="col-md-6">
+	        					<label for="contenance">Contenance</label>
+								<select id="selectPrix" onChange="updatePrice(this)"  name="contenance" class="form-control">
+                                    {% for stock in produit.getStocks() %}
+									    <option value="{{ stock.getContenance().getId() }}">{{ stock.getContenance().getQuantite()}} {{stock.getContenance().getUnite() }}</option>
+                                    {% endfor %}
+								</select>
+	        				</div>
+	        			</div>
+	        			<div class="product-count">
+	        				<label for="size">Quantité</label>
+	        				<form action="#" class="display-flex">
+							    <input onChange="updatePrice(this)" type="number" name="quantity" min="1" value="1" class="qty">
+							</form>
+		        			<div class="product-price-discount"><span class="prixProduit">00.00</span> €</div>
+
+
+							<a href="" class="round-black-btn">Ajouter au panier</a>
+	        			</div>
+	        		</div>
+	        	</div>
+	        </div>
+	        <div class="product-info-tabs">
+		        <ul class="nav nav-tabs" id="myTab" role="tablist">
+				  	<li class="nav-item">
+				    	<a class="nav-link active" id="description-tab" data-toggle="tab" href="#description" role="tab" aria-controls="description" aria-selected="true">Avis</a>
+				  	</li>
+				</ul>
+				<div class="tab-content" id="myTabContent">
+				  	<div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
+                        <div class="alert alert-danger">Il n'y a aucun avis pour le moment.</div>
+				  	</div>
+				  	
+				</div>
+			</div>
+		</div></div>
+	</div><br><br>
+
+
+
 {% endblock %}

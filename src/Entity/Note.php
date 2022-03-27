@@ -22,6 +22,9 @@ class Note
     #[ORM\ManyToOne(targetEntity: Produit::class, inversedBy: 'notes')]
     private $produit;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private $avis;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -59,6 +62,18 @@ class Note
     public function setProduit(?Produit $produit): self
     {
         $this->produit = $produit;
+
+        return $this;
+    }
+
+    public function getAvis(): ?string
+    {
+        return $this->avis;
+    }
+
+    public function setAvis(string $avis): self
+    {
+        $this->avis = $avis;
 
         return $this;
     }
