@@ -24,7 +24,14 @@ class CartController extends AbstractController
                 $this->addFlash('success', 'L\'article à bien été ajouté a votre panier.');
             }
         }
-        return $this->redirectToRoute('app_home');
+        return $this->redirectToRoute('app_cart');
+    }
 
+    #[Route('/cart', methods: ["GET"], name: 'app_cart')]
+    public function show(CartService $cs): Response
+    {
+        return $this->render(
+            'cart/show.html.twig'
+        );
     }
 }

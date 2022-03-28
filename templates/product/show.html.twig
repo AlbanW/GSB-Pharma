@@ -68,8 +68,12 @@ function updatePrice()
 	        			<div class="row">  
 	        				<div class="col-md-6">
 	        					<label for="contenance">Contenance</label>
+                                        
+
 								<select id="selectPrix" onChange="updatePrice(this)"  name="contenance" class="form-control">
+
                                     {% for stock in produit.getStocks() %}
+{{ dump(produit.getStocks()[0]) }}
 									    <option value="{{ stock.getContenance().getId() }}">{{ stock.getContenance().getQuantite()}} {{stock.getContenance().getUnite() }}</option>
                                     {% endfor %}
 								</select>
