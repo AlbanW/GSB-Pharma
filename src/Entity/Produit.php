@@ -116,6 +116,34 @@ class Produit
         return $this->notes;
     }
 
+    public function getLowPrice() : float
+    {
+        $low = 0;
+        foreach($this->getStocks() as $stock)
+        {
+            if($stock->getContenance()->getPrix() > $low) 
+                $low = $stock->getContenance()->getPrix();
+        }
+        return $low;
+    }
+
+    public function getAverageNote() : int 
+    {
+        $totalNote = 0;
+        $sumNote = 0;
+        foreach($this->getNotes() as $note)
+        {
+            $sumNote += $note->getNote();
+            $totalNote++;
+        }
+        return ($sumNote / $totalNote);
+    }
+
+    public function getTotalNotes() : int 
+    {
+        return count($this->getNotes());
+    }
+
     public function addNote(Note $note): self
     {
         if (!$this->notes->contains($note)) {
@@ -156,6 +184,15 @@ class Produit
     public function getStocks(): Collection
     {
         return $this->stocks;
+    }
+
+    public function haveStock() : bool
+    {
+        foreach($this->getStocks() as $stock)
+        {
+            if($stock->getStock() >= 1) return true;
+        }
+        return false;
     }
 
     public function addStock(Stock $stock): self

@@ -4,30 +4,65 @@
 
 {% block body %}
 
-<div class="jumbotron jumbotron-fluid" style=" border-bottom: 2px solid #343a40;">
-  <div class="container" style="text-align: center;">
-    <p class="lead">
-        Nous vous souhaitons la bienvenue sur notre site de vente en ligne de produits paramédicaux et bien-être
-à destination des particuliers.
+<style>
 
-Avec plus de 2000 produits paramédicaux à la vente, GsbPara vous propose à un tarif compétitif un large panel de produits livré rapidement chez vous !</p>
-  </div>
-</div>
+.background {
+   background-image: linear-gradient(
+      rgba(255, 255, 255, 0.3), 
+      rgba(255, 255, 255, 0.4)
+    ),
+    url(https://eskipaper.com/images/nature-background-3.jpg);
+    background-position: center;
 
+}
+
+.leadFont {
+    color:#343a40;
+}
+</style>
+<br><br>
 
 {% include '/base/flash.html.twig' %}
 <div class="container">
 <div class="card card-body">
   <div class="row">
     <div class="col-sm-4">
-  <div style="padding:3px;" class="card card-body">
-
-    <nav class="nav flex-column">
+  <div style="padding:3px;" class="card">
+  
+    <div class="card-body">
+    <form action="{{ path('app_product_category') }}" method="POST">
+      <div class="row"><div class="col">Catégorie:</div>  </div>
+      <select name="filterCat" class="form-select" id="">
+          {% if cat == "default" %}
+            <option selected value="default">Défaut</option>
+          {% else %} 
+            <option value="default">Défaut</option>
+          {% endif %}
         {% for categorie in categories %}
-            <a class="nav-link active" href="{{ path('app_product_category', {'id': categorie.getId() }) }}">{{ categorie.getLibelle() }}</a>
-        {% endfor %}
-    </nav>
+          {% if cat == categorie.getId() %}
+            <option selected value="{{categorie.getId()}}">{{ categorie.getLibelle() }}</option>
+          {% else %} 
+            <option value="{{categorie.getId()}}">{{ categorie.getLibelle() }}</option>
 
+          {% endif %}
+        {% endfor %}
+      </select><br>
+      <div class="row">
+        <div class="col">Prix minimum</div>  
+        <div class="col">Prix maximum</div>  
+      </div>
+      <div class="row">
+        <div class="col">
+          <input type="number" class="form-control" name="filterMin" min="1" max="399" value="{{min}}" id="">
+        </div>  
+        <div class="col">
+          <input type="number" class="form-control" name="filterMax" min="2" max="400" value="{{ max }}" id="">
+          </div>  
+      </div>
+      <hr>
+      <input type="submit" name="filter" value="Filtrer" class="btn btn-block btn-outline-primary" >
+    </form>
+</div>
 </div>
     </div>
     <div class="col-sm-8">
@@ -44,26 +79,55 @@ Avec plus de 2000 produits paramédicaux à la vente, GsbPara vous propose à un
 
 
   <div class="row">
-
+  {% if products|length > 0 %}
   {% for produit in products %}
           <div class="col-lg-4 col-md-6 mb-4">
             <div class="card h-100">
-              <center>
-              <a href="{{ path('app_product_show', {'id': produit.id }) }}"><img class="card-img-top" src="{{ produit.illustration }}" style="margin-top: 5px;text-align: center;height: 190px; width: 150px;" alt=""></a>
-              </center>
+            {% if produit.haveStock() == false %}
+                  <span class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Rupture de stock</span>
+            {% endif %}
+              <center><img class="card-img-top" style="height: 250px; width: 200px; text-align:center;" src="{{ produit.illustration }}" alt="{{produit.getNom()}}"></center>
               <div class="card-body">
-                <a style="text-decoration:none; color:black;" href="{{ path('app_product_show', {'id': produit.id }) }}"><h5>{{ produit.nom }}</h5></a>
+                <a style="text-decoration:none; color:black;" href="{{ path('app_product_show', {'id': produit.id }) }}"><h5>{{ produit.nom }}</h5> 
+                  
+                </a>
                 <p class="card-text">{{ produit.getResume() }}</p>
+
+                        <div class="text-left">
+                                   à partir de {{ produit.getLowPrice() }} €
+                                </div>
+                <br>
+
                 <a href="{{ path('app_product_show', {'id': produit.id }) }}" class="btn btn-sm btn-outline-secondary" href="allocine-details.html">Plus de détails</a>
               </div>
               <div class="card-footer">
-                <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+              
+                {% if produit.getTotalNotes() > 0 %}
+                <small class="text-muted">
+                  {% for i in 0..4 %}
+                    {% if produit.getAverageNote() > i %}
+                      <span class="star" style="color:gold;">★</span>
+                    {% else %}
+                      <span class="star" style="color:grey;">★</span>
+                    {% endif %}
+                  {% endfor %}
+                  ({{produit.getTotalNotes}})
+                </small>
+                {% else %}
+                  <small>Aucun avis</small>
+                 {% endif %}
+
               </div>
             </div>
           </div>
           
 {% endfor %}
+{% else %}
 
+    <div class="col">
+  <div class="alert alert-danger">Aucun élement ne correspond à votre recherche</div>
+</div>
+{% endif %}
           </div>
 </div>
 
@@ -73,7 +137,7 @@ Avec plus de 2000 produits paramédicaux à la vente, GsbPara vous propose à un
 </div>
 
 
-
+<br><br><br><br><br>
 </div>
 
 {% endblock %}

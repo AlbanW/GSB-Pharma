@@ -2,31 +2,27 @@
 
 namespace App\Entity;
 
-use App\Repository\StockRepository;
+use App\Repository\CommandeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: StockRepository::class)]
-class Stock
+#[ORM\Entity(repositoryClass: CommandeRepository::class)]
+class Commande
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'integer')]
-    private $stock;
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'commandes')]
+    private $client;
 
-    #[ORM\ManyToOne(targetEntity: Produit::class, inversedBy: 'stocks')]
-    private $produit;
+    #[ORM\Column(type: 'date')]
+    private $dateCommande;
 
-    #[ORM\OneToOne(targetEntity: Contenance::class, cascade: ['persist', 'remove'])]
-    private $contenance;
-
-    #[ORM\OneToMany(mappedBy: 'produit', targetEntity: CommandeProduit::class)]
+    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: CommandeProduit::class, cascade:["persist", "remove" ])]
     private $commandeProduits;
-
 
     public function __construct()
     {
@@ -38,38 +34,26 @@ class Stock
         return $this->id;
     }
 
-    public function getStock(): ?int
+    public function getClient(): ?Client
     {
-        return $this->stock;
+        return $this->client;
     }
 
-    public function setStock(int $stock): self
+    public function setClient(?Client $client): self
     {
-        $this->stock = $stock;
+        $this->client = $client;
 
         return $this;
     }
 
-    public function getProduit(): ?Produit
+    public function getDateCommande(): ?\DateTimeInterface
     {
-        return $this->produit;
+        return $this->dateCommande;
     }
 
-    public function setProduit(?Produit $produit): self
+    public function setDateCommande(\DateTimeInterface $dateCommande): self
     {
-        $this->produit = $produit;
-
-        return $this;
-    }
-
-    public function getContenance(): ?Contenance
-    {
-        return $this->contenance;
-    }
-
-    public function setContenance(?Contenance $contenance): self
-    {
-        $this->contenance = $contenance;
+        $this->dateCommande = $dateCommande;
 
         return $this;
     }
@@ -86,7 +70,7 @@ class Stock
     {
         if (!$this->commandeProduits->contains($commandeProduit)) {
             $this->commandeProduits[] = $commandeProduit;
-            $commandeProduit->setProduit($this);
+            $commandeProduit->setCommande($this);
         }
 
         return $this;
@@ -96,12 +80,11 @@ class Stock
     {
         if ($this->commandeProduits->removeElement($commandeProduit)) {
             // set the owning side to null (unless already changed)
-            if ($commandeProduit->getProduit() === $this) {
-                $commandeProduit->setProduit(null);
+            if ($commandeProduit->getCommande() === $this) {
+                $commandeProduit->setCommande(null);
             }
         }
 
         return $this;
     }
-
 }

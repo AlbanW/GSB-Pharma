@@ -67,9 +67,13 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'datetime')]
     private $acceptCguDate;
 
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Commande::class)]
+    private $commandes;
+
     public function __construct()
     {
         $this->notes = new ArrayCollection();
+        $this->commandes = new ArrayCollection();
     }
 
 
@@ -178,7 +182,7 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
 
   
 
-    public function getAcceptCgu(): ?bool
+    public function acceptCgu(): ?bool
     {
         return $this->acceptCgu;
     }
@@ -272,4 +276,36 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
+
+    /**
+     * @return Collection<int, Commande>
+     */
+    public function getCommandes(): Collection
+    {
+        return $this->commandes;
+    }
+
+    public function addCommande(Commande $commande): self
+    {
+        if (!$this->commandes->contains($commande)) {
+            $this->commandes[] = $commande;
+            $commande->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommande(Commande $commande): self
+    {
+        if ($this->commandes->removeElement($commande)) {
+            // set the owning side to null (unless already changed)
+            if ($commande->getClient() === $this) {
+                $commande->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+  
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\MarqueRepository;
 use App\Repository\ProduitRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,11 +20,12 @@ class HomeController extends AbstractController
     }
 
     #[Route('/', name: 'app_home')]
-    public function index(): Response
+    public function index(MarqueRepository $marque): Response
     {
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
-            'products' => $this->produitRepository->findAll()
+            'products' => $this->produitRepository->findAll(),
+            'marques' => $marque->findAll()
         ]);
     }
 }

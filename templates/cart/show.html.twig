@@ -22,18 +22,22 @@
             <img src="{{ aCart[0][0].getProduit().getIllustration() }}" style="height:100px;width: 100px;" alt="">
         </td>
         <td>
-            <p>{{  aCart[0][0].getProduit().getNom() }}</p>
+            <p>{{  aCart[0][0].getProduit().getNom() }} ({{ aCart[0][0].getContenance().getQuantite() }} {{ aCart[0][0].getContenance().getUnite() }})</p>
             <p>{{ aCart[1] }} x {{ aCart[0][0].getContenance().getPrix() }} €</p>    
         </td>
         <td>
-            <p><a style="margin:5px;" href="#" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></a><a style="margin:5px;" href="{{ path('app_product_show', {id: aCart[0][0].getProduit().getId()}) }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i></a></p>
+            <p><a style="margin:5px;" href="{{ path('app_cart_remove', {'id': aCart[2]}) }}" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></a><a style="margin:5px;" href="{{ path('app_product_show', {id: aCart[0][0].getProduit().getId()}) }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i></a></p>
         </td>
         </tr>
     {% endfor %}
   </tbody>
 </table>
 
+    {% if cart.countCart() == 0 %}
+        <div class="alert alert-danger">Vous n'avez aucun produit dans votre panier</div>
+    {% endif %}
     <br>
+    {% if cart.countCart() > 0 %}
     <div class="row">
         <div class="col-5">
         </div>
@@ -46,10 +50,20 @@
                     <tr></tr>
                 </tbody>
             </table>
-            <div><a href="#" class="btn btn-block btn-outline-primary">Payer</a></div>
+            {% if app.user %}
+                <div>
+                    <form action="{{ path('app_cart_pay') }}" method="post">
+                        <input type="submit" name="pay" class="btn btn-block btn-outline-primary" value="Payer">
+                    </form>
+                </div>
+            {% else %}
+                <div><a href="{{ path('app_login') }}" class="btn btn-block btn-outline-primary">Se connecter*</a></div>
+                <div><p style="color:#0097e6; font-weight: 100;">[<i class="fa fa-info"></i>] Vous devez être connecté pour passer une commande.</p></div>
+
+            {% endif %}
         </div>
     </div>
-
+    {% endif %}
     </div>
 </div>
 <br><br>

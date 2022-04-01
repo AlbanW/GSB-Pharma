@@ -1,4 +1,11 @@
 {% include '/base/header.html.twig' %}
+
+<style>
+.container 
+{
+  max-width: 1400px !important;
+}
+</style>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
@@ -19,40 +26,46 @@
         </li>
        
       </ul>
-         <ul class="navbar-nav d-flex">
+        <ul class="navbar-nav d-flex">
+        {% if app.user %}
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Espace membre</a>
+          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{ app.user.getNom() }}</a>
           <div class="dropdown-menu">
-            {% if app.user %}
               <a class="dropdown-item" href="{{path('app_profil')}}">Votre profil</a>
               <a class="dropdown-item" href="{{path('app_profil')}}">Vos commandes <span class="badge badge-primary">0</span></a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="{{path('app_logout')}}">Déconnexion</a>
-            {% else %}
+  
+
+            </div>
+        </li>
+         {% else %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Espace membre</a>
+          <div class="dropdown-menu">
+  
               <a class="dropdown-item" href="{{ path('app_login') }}">Je me connecte</a>
               <a class="dropdown-item" href="{{ path('app_register') }}">Je m'inscrit</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="#">Mot de passe oublié</a>
-            {% endif %}
 
             </div>
         </li>
+         {% endif %}
         </ul>
          <ul class="navbar-nav d-flex">
         <li class="nav-item dropdown">
-            <a class="nav-link" href="{{ path('app_cart') }}">
-                <span style="padding:1.25em 1.4000000000000004em" class="badge rounded-pill bg-success">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag" viewBox="0 0 16 16">
-                    <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
-                </svg> ({{ cart.countCart() }})</span>
+            <a class="btn btn-outline-success text-white" style="border-color:#7bed9f; background-color:#7bed9f;" href="{{ path('app_cart') }}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cart-fill" style="color:#343a40;"viewBox="0 0 16 16">
+                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+              </svg>
+              <span class="badge bg-dark text-white ms-1 rounded-pill">{{ cart.countCart() }}</span>
             </a>
         </li>
       </ul>
     </div>
   </div>
 </nav>
-
-
 
     {% block body %}{% endblock %}
 {% include '/base/footer.html.twig' %}

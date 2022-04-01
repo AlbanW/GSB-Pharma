@@ -2,11 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Note;
 use App\Entity\Produit;
 use App\Form\CartType;
 use App\Repository\CategorieRepository;
 use App\Repository\ContenanceRepository;
 use App\Repository\ProduitRepository;
+use App\Repository\StockRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,32 +35,95 @@ class ProductController extends AbstractController
         }
     }
 
-    #[Route('/category/{id}', name: 'app_product_category')]
-    public function category(int $id = -1, CategorieRepository $cr, ProduitRepository $pr): Response
+    #[Route('/category', name: 'app_product_category')]
+    public function category(CategorieRepository $cr, $min = 1, $max = 400, $cat = 'default',  ProduitRepository $pr): Response
     {
         $produits = $pr->findAll();
-        if($id != -1 AND $cr->find($id))
+        if(isset($_POST['filter']))
         {
-            $produits = $pr->findBy(array('category' => $id));
-        } 
+            if(is_numeric(($_POST['filterCat'])))
+            {
+                $id = intval($_POST['filterCat']);
+                if($id != -1 AND $cr->find($id))
+                {
+                    $produits = $pr->findBy(array('category' => $id));
+                } 
+
+                $cat = $id;
+            }
+
+            if(is_numeric($_POST['filterMin']) && is_numeric($_POST['filterMax']))
+            {
+                $prod = [];
+                foreach($produits as $produit)
+                {
+                    if(($produit->getLowPrice() >= intval($_POST['filterMin'])) && ($produit->getLowPrice() <= intval($_POST['filterMax']))) {
+                        $prod[] = $produit;
+                    }
+                }
+
+                $min = intval($_POST['filterMin']);
+                $max = intval($_POST['filterMax']);
+                $produits = $prod;
+            }
+        }
+   
         
         return $this->render("/product/category.html.twig", [
             "products" => $produits,
-            "categories" => $cr->findAll()
+            "categories" => $cr->findAll(),
+            "min"=> $min,
+            "max" => $max,
+            "cat" => $cat
         ]);
+    }
+
+    #[Route('/review/add/{id}', methods: ["POST"], name: 'app_product_review_add')]
+    public function addReview($id, ProduitRepository $pr, EntityManagerInterface $entityManager) 
+    {
+        if(!$pr->find($id)) return $this->redirectToRoute('app_home');
+        if(isset($_POST['review']))
+        {
+            if(isset($_POST['avis']) && !empty($_POST['avis'])) 
+            {
+                if(!isset($_POST['rateReview'])) { $rate = 0; } else {  $rate = intval($_POST['rateReview']); }
+                if(is_numeric($rate) && (intval($rate) >= 0 && intval($rate) <= 5))
+                {
+                    $avis = htmlspecialchars($_POST['avis']);
+
+                    $note = new Note();
+                    $note->setAvis($avis);
+                    $note->setIdClient($this->getUser());
+                    $note->setProduit($pr->find($id));
+                    $note->setNote($rate);    
+
+                    $entityManager->persist($note);
+                    $entityManager->flush();
+
+                    return $this->redirectToRoute('app_product_show', ['id'=>$id]);
+                } else 
+                return $this->redirectToRoute('app_product_show', ['id'=>$id]);
+            } else 
+            return $this->redirectToRoute('app_product_show', ['id'=>$id]);
+        } else 
+        return $this->redirectToRoute('app_product_show', ['id'=>$id]);
     }
     
 
     #[Route('/ajax', methods: ['POST'], name:'app_ajax')]
-    public function ajax(Request $request, ContenanceRepository $cr) :JsonResponse
+    public function ajax(Request $request, ContenanceRepository $cr, StockRepository $sr) :JsonResponse
     {
+        $stock = 0;
         $id = $request->request->get('id');
         if($cr->find($id))
         {
+            $stock = $sr->findOneBy(array('contenance' => $id));
+            $stock = $stock->getStock();
+
             $crr  = $cr->find($id)->getPrix();
         return new JsonResponse(array(
             'status' => 'Prix',
-            'message' => "$crr"),
+            'message' => [$crr,$stock]),
         200);
         }
     }

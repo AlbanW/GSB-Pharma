@@ -22,10 +22,23 @@ class CartService
         $this->stock = $sr;
     }
 
-    public function add($data)
+    public function add($id, $qte)
     {
         $panier = $this->session->get('panier', []);
-        $panier[] = $data;
+        if(isset($panier[$id]))
+        {
+            $panier[$id] = $panier[$id] + $qte;
+        } else {
+            $panier[$id] = $qte;
+        }
+        $this->session->set('panier', $panier);
+    }
+
+    public function remove($id)
+    {
+        $panier = $this->session->get('panier', []);
+        unset($panier[$id]);
+        
         $this->session->set('panier', $panier);
     }
 
@@ -42,20 +55,25 @@ class CartService
         {
             $contenance = ($cart[0][0])->getContenance()->getPrix();
             $qte = $cart[1];
-            $prix += $qte* $contenance;
+            $prix += $qte * $contenance;
         }
 
         return $prix;
     }
+
+    public function clearCart()
+    {
+        $this->session->clear('panier');
+    }
     public function getCart()
     {
         $produits = [];
-        foreach($this->session->get('panier') as $key)
+        foreach($this->session->get('panier', []) as $id => $qte)
         {
-            $contenance = $this->stock->findBy(array('contenance' => $key[0]));
-            $qte = $key[1];
+            $contenance = $this->stock->findBy(array('contenance' => $id));
+            $qte = $qte;
 
-            $produits[] = [$contenance, $qte];
+            $produits[] = [$contenance, $qte, $id];
         }
         return $produits;
     }
