@@ -90,9 +90,9 @@ function updatePrice()
 
 								<select id="selectPrix" onChange="updatePrice(this)"  name="contenance" class="form-control">
 
-                                    {% for stock in produit.getStocks() %}
+                                    {% for stock in produit.getContenances() %}
 										{% if stock.getStock() > 0 %}
-									    <option value="{{ stock.getContenance().getId() }}">{{ stock.getContenance().getQuantite()}} {{stock.getContenance().getUnite() }}</option>
+									    <option value="{{ stock.getId() }}">{{ stock.getQuantite()}} {{stock.getUnite() }}</option>
 										{% endif %}
 								    {% endfor %}
 								</select>
@@ -103,8 +103,8 @@ function updatePrice()
 	        				<form action="#" class="display-flex">
 							    <input  onChange="updatePrice(this)" id="quantity" type="number" name="quantity" min="1" value="1" class="qty">
 							</form>
-							<label for="quantity" id="resteProduit">Stock restant: {{ produit.getStocks()[0].getStock() }}</label>
-		        			<div class="product-price-discount"><span class="prixProduit">{{ produit.getStocks()[0].getContenance().getPrix() }}</span> €</div>
+							<label for="quantity" id="resteProduit">Stock restant: {{ produit.getContenances()[0].getStock() }}</label>
+		        			<div class="product-price-discount"><span class="prixProduit">{{ produit.getContenances()[0].getPrix() }}</span> €</div>
 
                                 <input type="submit" class="round-black-btn" value="Ajouter au panier">
                         

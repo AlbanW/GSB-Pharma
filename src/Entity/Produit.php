@@ -33,13 +33,15 @@ class Produit
     #[ORM\ManyToOne(targetEntity: Categorie::class, inversedBy: 'produits')]
     private $category;
 
-    #[ORM\OneToMany(mappedBy: 'produit', targetEntity: Stock::class)]
-    private $stocks;
+    #[ORM\OneToMany(mappedBy: 'produit', targetEntity: Contenance::class)]
+    private $contenances;
+
+
 
     public function __construct()
     {
         $this->notes = new ArrayCollection();
-        $this->stocks = new ArrayCollection();
+        $this->contenances = new ArrayCollection();
     }
 
 
@@ -119,10 +121,10 @@ class Produit
     public function getLowPrice() : float
     {
         $low = 0;
-        foreach($this->getStocks() as $stock)
+        foreach($this->getContenances() as $contenance)
         {
-            if($stock->getContenance()->getPrix() > $low) 
-                $low = $stock->getContenance()->getPrix();
+            if($contenance->getPrix() > $low) 
+                $low = $contenance->getPrix();
         }
         return $low;
     }
@@ -154,6 +156,13 @@ class Produit
         return $this;
     }
 
+    public function haveStock() : ?bool
+    {
+        foreach($this->getContenances() as $contenance)
+            if($contenance->getStock() != null && $contenance->getStock() > 0) return true;
+        return false;
+    }
+
     public function removeNote(Note $note): self
     {
         if ($this->notes->removeElement($note)) {
@@ -179,41 +188,36 @@ class Produit
     }
 
     /**
-     * @return Collection<int, Stock>
+     * @return Collection<int, Contenance>
      */
-    public function getStocks(): Collection
+    public function getContenances(): Collection
     {
-        return $this->stocks;
+        return $this->contenances;
     }
 
-    public function haveStock() : bool
+    public function addContenance(Contenance $contenance): self
     {
-        foreach($this->getStocks() as $stock)
-        {
-            if($stock->getStock() >= 1) return true;
-        }
-        return false;
-    }
-
-    public function addStock(Stock $stock): self
-    {
-        if (!$this->stocks->contains($stock)) {
-            $this->stocks[] = $stock;
-            $stock->setProduit($this);
+        if (!$this->contenances->contains($contenance)) {
+            $this->contenances[] = $contenance;
+            $contenance->setProduit($this);
         }
 
         return $this;
     }
 
-    public function removeStock(Stock $stock): self
+    public function removeContenance(Contenance $contenance): self
     {
-        if ($this->stocks->removeElement($stock)) {
+        if ($this->contenances->removeElement($contenance)) {
             // set the owning side to null (unless already changed)
-            if ($stock->getProduit() === $this) {
-                $stock->setProduit(null);
+            if ($contenance->getProduit() === $this) {
+                $contenance->setProduit(null);
             }
         }
 
         return $this;
     }
+
+
+
+
 }

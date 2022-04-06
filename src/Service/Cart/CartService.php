@@ -2,6 +2,7 @@
 namespace App\Service\Cart;
 
 use App\Entity\Contenance;
+use App\Repository\ContenanceRepository;
 use App\Repository\StockRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -16,10 +17,10 @@ class CartService
     protected $stock;
 
 
-    public function __construct(RequestStack $requestStack, StockRepository $sr)
+    public function __construct(RequestStack $requestStack, ContenanceRepository $cr)
     {
         $this->session = $requestStack->getSession();   
-        $this->stock = $sr;
+        $this->stock = $cr;
     }
 
     public function add($id, $qte)
@@ -53,7 +54,7 @@ class CartService
         $prix = 0.0;
         foreach($this->getCart() as $cart)
         {
-            $contenance = ($cart[0][0])->getContenance()->getPrix();
+            $contenance = ($cart[0][0])->getPrix();
             $qte = $cart[1];
             $prix += $qte * $contenance;
         }
@@ -65,16 +66,18 @@ class CartService
     {
         $this->session->clear('panier');
     }
+
     public function getCart()
     {
         $produits = [];
         foreach($this->session->get('panier', []) as $id => $qte)
         {
-            $contenance = $this->stock->findBy(array('contenance' => $id));
+            $contenance = $this->stock->findBy(array('id' => $id));
             $qte = $qte;
 
             $produits[] = [$contenance, $qte, $id];
         }
         return $produits;
     }
+
 }

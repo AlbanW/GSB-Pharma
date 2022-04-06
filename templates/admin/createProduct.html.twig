@@ -1,0 +1,77 @@
+{% extends 'baseAdmin.html.twig' %}
+
+
+{% block menu %}
+    <div class="card card-body">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{{ path('app_admin_show_products') }}">Liste des produits</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+            </li>
+    
+        </ul>
+    </div>
+{% endblock %}
+
+{% block body %}
+
+
+
+
+    <div class="card card-body">
+        <h1>Création d'un produit</h1>
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="productName">Nom du produit</label>
+                <input type="text" class="form-control" id="productName" aria-describedby="productName" placeholder="Nom du produit">
+            </div><br>
+            <div class="form-group">
+                <label for="productDesc">Description du produit</label>
+                <input type="text" class="form-control" id="productDesc" aria-describedby="productDesc" placeholder="Description du produit">
+            </div><br>
+            <div class="form-group">
+                <label for="productImage">Illustration du produit</label>
+                <input type="file" class="form-control" id="productImage" aria-describedby="productImage" >
+            </div><br>
+            <div class="form-group">
+                <label for="productImage">Catégorie du produit</label>
+                <select name="productCategory" class="form-control">
+                 {% for cat in category %}
+                    <option value="{{ cat.getId() }}">{{cat.getLibelle()}}</option>
+                 {% endfor %}
+                </select>
+            </div><br><h5>Contenance</h5><br>
+            <div class="contenance" style="margin: 5px; margin-bottom: 15px;">
+            <div class="card card-body"  style="background-color: #e1ebf3;">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="contenance">Quantité produit</label>
+                            <input type="number" value="1" class="form-control" id="contenanceQte[]" aria-describedby="contenance" >
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="contenance">Unité</label>
+                            <select name="contenanceUnite[]" id="" class="form-control">
+                                <option value="ml">ml</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                            <label for="contenance">Quantité en stock </label>
+                            <input type="number" value="1" class="form-control" id="contenanceStock[]" aria-describedby="contenance" >
+                    </div>
+                </div>
+</div>
+            </div>
+                <div>
+                    <a href="#" id="addContenance" class="btn btn-primary" style="float: right; margin: 5px;">+ Ajouter une contenance</a>
+                </div>
+            <br>
+            <input type="submit" value="Créer le produit" name="addProduct" class="btn btn-success">
+        </form>
+   </div><br><br>
+{% endblock %}

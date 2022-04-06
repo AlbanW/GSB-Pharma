@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Commande;
 use App\Entity\CommandeProduit;
+use App\Entity\Produit;
 use App\Repository\ContenanceRepository;
+use App\Repository\ProduitRepository;
 use App\Repository\StockRepository;
 use App\Service\Cart\CartService;
 use DateTime;
@@ -34,18 +36,17 @@ class CartController extends AbstractController
 
 
     #[Route('/cart/pay', methods: ["POST"], name: 'app_cart_pay')]
-    public function pay(CartService $cart, StockRepository $stockR, EntityManagerInterface $em)
+    public function pay(CartService $cart, ContenanceRepository $contenanceR, EntityManagerInterface $em)
     {
         if(isset($_POST['pay']) && $this->getUser() != null)
         {
             $panier = $cart->getCart();
             foreach($panier as $pan)
             {
-                $contenance = $pan[0][0]->getContenance();
                 $produit = $pan[0][0]->getProduit();
                 $stock = $pan[1];
                 $stock_id = $pan[0][0]->getId();
-                $reste = $stockR->find($stock_id)->getStock();
+                $reste = $contenanceR->find($stock_id)->getStock();
 
                 if($stock > $reste)
                 {
@@ -63,17 +64,27 @@ class CartController extends AbstractController
                 $produit = $pan[0][0]->getProduit();
                 $stock = $pan[1];
                 $stock_id = $pan[0][0]->getId();
-                $reste = $stockR->find($stock_id)->getStock();
-                
+                $reste = $contenanceR->find($stock_id)->getStock();
+
+
                 $commandeProduit = new CommandeProduit();
-                $commandeProduit->setProduit($stockR->find($stock_id));
+                $commandeProduit->setContenance($contenanceR->find($stock_id));
                 $commandeProduit->setQuantite($stock);
                 $commande->addCommandeProduit($commandeProduit);
+
+                
+                $contenance = $contenanceR->find($stock_id);
+                $contenance->decrementStock($stock);
+
+                $em->persist($contenance);
+                $em->flush();
             }
 
             $commande->setDateCommande(new \DateTime());
             $em->persist($commande);
             $em->flush();
+
+
 
             $cart->clearCart();
             $this->addFlash('success', 'Commande succès');

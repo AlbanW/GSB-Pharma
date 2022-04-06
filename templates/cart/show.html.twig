@@ -22,8 +22,8 @@
             <img src="{{ aCart[0][0].getProduit().getIllustration() }}" style="height:100px;width: 100px;" alt="">
         </td>
         <td>
-            <p>{{  aCart[0][0].getProduit().getNom() }} ({{ aCart[0][0].getContenance().getQuantite() }} {{ aCart[0][0].getContenance().getUnite() }})</p>
-            <p>{{ aCart[1] }} x {{ aCart[0][0].getContenance().getPrix() }} €</p>    
+            <p>{{  aCart[0][0].getProduit().getNom() }} ({{ aCart[0][0].getQuantite() }} {{ aCart[0][0].getUnite() }})</p>
+            <p>{{ aCart[1] }} x {{ aCart[0][0].getPrix() }} €</p>    
         </td>
         <td>
             <p><a style="margin:5px;" href="{{ path('app_cart_remove', {'id': aCart[2]}) }}" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></a><a style="margin:5px;" href="{{ path('app_product_show', {id: aCart[0][0].getProduit().getId()}) }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i></a></p>

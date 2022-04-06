@@ -111,16 +111,17 @@ class ProductController extends AbstractController
     
 
     #[Route('/ajax', methods: ['POST'], name:'app_ajax')]
-    public function ajax(Request $request, ContenanceRepository $cr, StockRepository $sr) :JsonResponse
+    public function ajax(Request $request, ContenanceRepository $cr) :JsonResponse
     {
         $stock = 0;
         $id = $request->request->get('id');
         if($cr->find($id))
         {
-            $stock = $sr->findOneBy(array('contenance' => $id));
+            $stock = $cr->findOneBy(array('id' => $id));
             $stock = $stock->getStock();
 
             $crr  = $cr->find($id)->getPrix();
+
         return new JsonResponse(array(
             'status' => 'Prix',
             'message' => [$crr,$stock]),

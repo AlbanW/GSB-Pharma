@@ -1,0 +1,43 @@
+{% extends 'baseAdmin.html.twig' %}
+
+
+{% block menu %}
+    <div class="card card-body">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{{ path('app_admin_show_products') }}">Liste des produits</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+            </li>
+    
+        </ul>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="card card-body">
+    <div>
+        <a href="{{ path('app_admin_create_product') }}" class="btn btn-success btn-sm" style="float: right;">Ajouter un produit</a><br>
+        </div>
+    <table class="table">
+    <thead>
+        <tr>
+        <th scope="col">#</th>
+        <th scope="col">Nom</th>
+        <th scope="col">Catégorie</th>
+        <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for produit in produits %}
+        <tr>
+        <th scope="row">{{ produit.getId() }}</th>
+        <td>{{ produit.getNom() }}}}</td>
+        <td>{{ produit.getCategory().getLibelle() }}</td>
+        <td>@mdo</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table></div>
+{% endblock %}

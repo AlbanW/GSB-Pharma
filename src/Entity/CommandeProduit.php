@@ -16,11 +16,11 @@ class CommandeProduit
     #[ORM\ManyToOne(targetEntity: Commande::class, inversedBy: 'commandeProduits')]
     private $commande;
 
-    #[ORM\ManyToOne(targetEntity: Stock::class, inversedBy: 'commandeProduits')]
-    private $produit;
-
     #[ORM\Column(type: 'integer')]
     private $quantite;
+
+    #[ORM\ManyToOne(targetEntity: Contenance::class, inversedBy: 'commandeProduits')]
+    private $contenance;
 
     public function getId(): ?int
     {
@@ -39,18 +39,6 @@ class CommandeProduit
         return $this;
     }
 
-    public function getProduit(): ?Stock
-    {
-        return $this->produit;
-    }
-
-    public function setProduit(?Stock $produit): self
-    {
-        $this->produit = $produit;
-
-        return $this;
-    }
-
     public function getQuantite(): ?int
     {
         return $this->quantite;
@@ -59,6 +47,18 @@ class CommandeProduit
     public function setQuantite(int $quantite): self
     {
         $this->quantite = $quantite;
+
+        return $this;
+    }
+
+    public function getContenance(): ?Contenance
+    {
+        return $this->contenance;
+    }
+
+    public function setContenance(?Contenance $contenance): self
+    {
+        $this->contenance = $contenance;
 
         return $this;
     }
