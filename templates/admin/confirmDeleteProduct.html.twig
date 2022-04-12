@@ -1,0 +1,31 @@
+{% extends 'baseAdmin.html.twig' %}
+
+
+{% block menu %}
+    <div class="card card-body">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{{ path('app_admin_show_products') }}">Liste des produits</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+            </li>
+    
+        </ul>
+    </div>
+{% endblock %}
+
+{% block body %}
+
+
+
+
+    <div class="card card-body">
+        <div style="text-align: center; margin: 40px;">
+            <h3>Vous êtes sur le point de supprimer le produit: </h3><h6>{{ produit.getNom() }}</h6><br>
+            <form action="#" method="post">
+                <input type="submit" name="deleteProduct" value="Supprimer" class=" btn btn-danger btn-block">
+            </form>
+        </div>    
+    </div>
+{% endblock %}

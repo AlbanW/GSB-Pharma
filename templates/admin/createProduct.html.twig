@@ -22,53 +22,85 @@
 
     <div class="card card-body">
         <h1>Création d'un produit</h1>
-        <form action="#" method="post">
+        <form enctype="multipart/form-data" action="#" method="post">
             <div class="form-group">
                 <label for="productName">Nom du produit</label>
-                <input type="text" class="form-control" id="productName" aria-describedby="productName" placeholder="Nom du produit">
+                <input type="text" class="form-control" required name="productName" aria-describedby="productName" placeholder="Nom du produit">
             </div><br>
             <div class="form-group">
                 <label for="productDesc">Description du produit</label>
-                <input type="text" class="form-control" id="productDesc" aria-describedby="productDesc" placeholder="Description du produit">
+                <textarea type="textarea" class="form-control" required name="productDesc" aria-describedby="productDesc" placeholder="Description du produit"></textarea>
             </div><br>
             <div class="form-group">
                 <label for="productImage">Illustration du produit</label>
-                <input type="file" class="form-control" id="productImage" aria-describedby="productImage" >
+                <input type="file" class="form-control" required name="productImage" aria-describedby="productImage" >
             </div><br>
             <div class="form-group">
                 <label for="productImage">Catégorie du produit</label>
-                <select name="productCategory" class="form-control">
+                <select required name="productCategory" class="form-control">
                  {% for cat in category %}
                     <option value="{{ cat.getId() }}">{{cat.getLibelle()}}</option>
                  {% endfor %}
                 </select>
-            </div><br><h5>Contenance</h5><br>
+            </div><br>
+            <div class="form-group">
+                <label for="productImage">Marque du produit</label>
+                <select required name="productMarque" class="form-control">
+                 {% for mar in marque %}
+                    <option value="{{ mar.getId() }}">{{mar.getLibelle()}}</option>
+                 {% endfor %}
+                </select>
+            </div>
+            
+            
+            <br><h5>Contenance</h5><br>
             <div class="contenance" style="margin: 5px; margin-bottom: 15px;">
             <div class="card card-body"  style="background-color: #e1ebf3;">
                 <div class="row">
                     <div class="col">
                         <div class="form-group">
                             <label for="contenance">Quantité produit</label>
-                            <input type="number" value="1" class="form-control" id="contenanceQte[]" aria-describedby="contenance" >
+                            <input required type="number" value="1" class="form-control" name="contenanceQte[]" aria-describedby="contenance" >
                         </div>
                     </div>
                     <div class="col">
                         <div class="form-group">
                             <label for="contenance">Unité</label>
-                            <select name="contenanceUnite[]" id="" class="form-control">
+                            <select required name="contenanceUnite[]" id="" class="form-control">
+                    
                                 <option value="ml">ml</option>
+                                <option value="ml">cl</option>
+                                <option value="ml">l</option>
+                                <option value="ml">kg</option>
+                                <option value="ml">g</option>
+
                             </select>
                         </div>
                     </div>
+                </div>
+                <div class="row">
+                <div class="col">
+                
                     <div class="form-group">
                             <label for="contenance">Quantité en stock </label>
-                            <input type="number" value="1" class="form-control" id="contenanceStock[]" aria-describedby="contenance" >
+                            <input required type="number" value="1" class="form-control" name="contenanceStock[]" aria-describedby="contenance" >
                     </div>
+
+                </div>
+                
+                <div class="col">
+                
+                
+                    <div class="form-group">
+                            <label for="contenancePrix">Prix </label>
+                            <input required step="0.01" type="number" value="1" class="form-control" name="contenancePrix[]" aria-describedby="productPrix" >
+                    </div>
+                </div>
                 </div>
 </div>
             </div>
                 <div>
-                    <a href="#" id="addContenance" class="btn btn-primary" style="float: right; margin: 5px;">+ Ajouter une contenance</a>
+                    <a href="#"  id="addContenance" class="btn btn-primary" style="float: right; margin: 5px;">+ Ajouter une contenance</a>
                 </div>
             <br>
             <input type="submit" value="Créer le produit" name="addProduct" class="btn btn-success">

@@ -16,7 +16,15 @@
 {% endblock %}
 
 {% block body %}
+<style>
+    a.edit 
+    {
+        text-decoration: none; 
+        margin-right: 10px;
+    }
+</style>
     <div class="card card-body">
+
     <div>
         <a href="{{ path('app_admin_create_product') }}" class="btn btn-success btn-sm" style="float: right;">Ajouter un produit</a><br>
         </div>
@@ -33,9 +41,11 @@
     {% for produit in produits %}
         <tr>
         <th scope="row">{{ produit.getId() }}</th>
-        <td>{{ produit.getNom() }}}}</td>
+        <td>{{ produit.getNom() }}</td>
         <td>{{ produit.getCategory().getLibelle() }}</td>
-        <td>@mdo</td>
+        <td style="text-align: center;">
+            <a href="{{ path('app_admin_delete_product', {id: produit.getId()}) }}" class="edit">Supprimer</a><a class="edit" href="{{ path('app_admin_manage_product', {id: produit.getId()}) }}">Gestion stock</a>
+        </td>
         </tr>
     {% endfor %}
     </tbody>

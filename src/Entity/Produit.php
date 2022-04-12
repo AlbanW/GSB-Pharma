@@ -33,7 +33,7 @@ class Produit
     #[ORM\ManyToOne(targetEntity: Categorie::class, inversedBy: 'produits')]
     private $category;
 
-    #[ORM\OneToMany(mappedBy: 'produit', targetEntity: Contenance::class)]
+    #[ORM\OneToMany(mappedBy: 'produit', targetEntity: Contenance::class, cascade:["persist", "remove"] )]
     private $contenances;
 
 
@@ -88,7 +88,7 @@ class Produit
 
     public function getIllustration(): ?string
     {
-        return $this->illustration;
+        return "/assets/img/product/" . $this->illustration;
     }
 
     public function setIllustration(string $illustration): self
