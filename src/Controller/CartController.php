@@ -2,18 +2,19 @@
 
 namespace App\Controller;
 
+use DateTime;
+use App\Entity\Produit;
 use App\Entity\Commande;
 use App\Entity\CommandeProduit;
-use App\Entity\Produit;
-use App\Repository\ContenanceRepository;
-use App\Repository\ProduitRepository;
-use App\Repository\StockRepository;
 use App\Service\Cart\CartService;
-use DateTime;
+use App\Repository\StockRepository;
+use App\Service\Order\OrderService;
+use App\Repository\ProduitRepository;
+use App\Repository\ContenanceRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CartController extends AbstractController
 {
@@ -81,15 +82,14 @@ class CartController extends AbstractController
             }
 
             $commande->setDateCommande(new \DateTime());
+            $commande->setStatus(OrderService::STATUS_WAITING);
             $em->persist($commande);
             $em->flush();
 
 
 
             $cart->clearCart();
-            $this->addFlash('success', 'Commande succès');
-
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_order_success');
         }
     }
 

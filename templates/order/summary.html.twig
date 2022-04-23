@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Récapitulatif de commande{% endblock %}
+
+{% block body %}
+
+<style>
+
+.background {
+   background-image: linear-gradient(
+      rgba(255, 255, 255, 0.3), 
+      rgba(255, 255, 255, 0.4)
+    ),
+    url(https://eskipaper.com/images/nature-background-3.jpg);
+    background-position: center;
+
+}
+
+.leadFont {
+    color:#343a40;
+}
+</style>
+<br><br>
+
+{% include '/base/flash.html.twig' %}
+<div class="container">
+<div class="card card-body">
+    <h3 style="color: #343a40;">Récapitulatif</h3>
+    <a href="{{ path('app_order') }}" style="color:black;"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-left" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M7.364 3.5a.5.5 0 0 1 .5-.5H14.5A1.5 1.5 0 0 1 16 4.5v10a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 3 14.5V7.864a.5.5 0 1 1 1 0V14.5a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5v-10a.5.5 0 0 0-.5-.5H7.864a.5.5 0 0 1-.5-.5z"/>
+  <path fill-rule="evenodd" d="M0 .5A.5.5 0 0 1 .5 0h5a.5.5 0 0 1 0 1H1.707l8.147 8.146a.5.5 0 0 1-.708.708L1 1.707V5.5a.5.5 0 0 1-1 0v-5z"/>
+</svg> Retour vers la liste des commandes</a> 
+<hr>   
+    <br>
+<br>
+{% if commande.getStatus() == 0 %}
+<div style="padding-bottom: 0px;" class="alert alert-warning"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+      <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+      </svg>
+      <strong style="margin: 5px;">Votre commande est en cours de traitement</strong><br>
+      <p>Patientez, nos équipes prennent en charge votre commande.</p>
+</div>
+{% endif %}
+{% if commande.getStatus() == 1 %}
+<div style="padding-bottom: 0px;" class="alert alert-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+      <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+      </svg>
+      <strong style="margin: 5px;">Votre commande est en cours de livraison</strong><br>
+      <p>Date estimée de livraison: {{ commande.getStrDate() }}</p>
+</div>
+{% endif %}
+{% if commande.getStatus() == 2 %}
+<div style="padding-bottom: 0px;" class="alert alert-success"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+      <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+      </svg>
+      <strong style="margin: 5px;">Votre commande est livré</strong><br>
+      <p>Estimation de départ de la date de livraison: {{ commande.getStrDate() }}</p>
+</div>
+{% endif %}
+{% if commande.getStatus() == 3 %}
+<div style="padding-bottom: 0px;" class="alert alert-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+      <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+      </svg>
+      <strong style="margin: 5px;">Votre commande est en cours de remboursement</strong><br>
+      <p>Toutes nos excuses pour la gêne occasionnée, nos équipes s'activent afin de procéder à votre remboursement.</p>
+</div>
+{% endif %}
+
+<br>
+    <div class="row">
+        <div class="col">
+            <div class="alert alert-secondary">
+                <h6 style="color: #343a40; font-size: 0.8em;">Contenu de votre commande:</h6>
+                    {% for produit in commande.getCommandeProduits() %}
+                        <p style="margin-left: 15px;">
+                            - {{ produit.getContenance().getProduit().getNom() }} x {{ produit.getQuantite() }}
+                            <a style="color: black; font-decoration: underline;" href="{{ path('app_product_show', {'id': produit.getContenance().getProduit().getId()}) }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                    <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                                    <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                                </svg>
+                            </a>
+                        </p>
+                    {% endfor %}
+            </div>
+        </div>
+        <div class="col">
+            <div class="alert alert-secondary">
+                <h6 style="color: #343a40; font-size: 0.8em;">Information de livraison:</h6>
+                <ul>
+                    <li>Ville de livraison: {{ app.user.getVille() }}</li>
+                    <li>Adresse de livraison: {{ app.user.getAdresse() }}</li>
+                    <li>Code postal: {{ app.user.getCodePostal() }}</li>
+                </ul>
+            </div>
+        </div>
+        </div>
+<br>
+    
+        <h6 style="color: #343a40; font-size: 0.8em;">Nous vous remercions pour votre confiance <span style="color:red;">♥</span> !</h6>
+</div>
+
+
+<br><br><br><br><br>
+</div>
+
+{% endblock %}

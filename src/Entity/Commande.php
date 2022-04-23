@@ -24,6 +24,12 @@ class Commande
     #[ORM\OneToMany(mappedBy: 'commande', targetEntity: CommandeProduit::class, cascade:["persist", "remove" ])]
     private $commandeProduits;
 
+    #[ORM\Column(type: 'integer')]
+    private $status;
+
+    #[ORM\Column(type: 'date', nullable: true)]
+    private $dateLivraison;
+
     public function __construct()
     {
         $this->commandeProduits = new ArrayCollection();
@@ -84,6 +90,35 @@ class Commande
                 $commandeProduit->setCommande(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getDateLivraison(): ?\DateTimeInterface
+    {
+        return $this->dateLivraison;
+    }
+
+    public function getStrDate() : ?string
+    {
+        return ($this->dateLivraison)->format('d/m/Y');;
+    }
+
+    public function setDateLivraison(?\DateTimeInterface $dateLivraison): self
+    {
+        $this->dateLivraison = $dateLivraison;
 
         return $this;
     }

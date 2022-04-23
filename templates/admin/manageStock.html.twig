@@ -22,7 +22,7 @@
 
     <div class="card card-body">
         <h3>Stock {{ produit.getNom() }}</h3>
-        <form enctype="multipart/form-data" action="#" method="post">
+        <form action="#" method="post">
             <br><h5>Contenance</h5><br>
             {% for st in stock %}
                     <div class="contenance" style="margin: 5px; margin-bottom: 15px;">
@@ -37,9 +37,13 @@
                             <div class="col">
                                 <div class="form-group">
                                     <label for="contenance">Unité</label>
-                                    <select required name="contenanceUnite[]" id="" class="form-control">
-                            
-                                        <option value="ml">{{ st.getUnite() }}</option>
+                                    <select  required name="contenanceUnite[]" id="" class="form-control">
+                                        {% if st.getUnite() == "ml" %} <option selected value="ml">ml</option>{% else %} <option value="ml">ml</option>{% endif %}
+                                        {% if st.getUnite() == "cl" %} <option selected value="cl">cl</option>{% else %} <option value="cl">cl</option>{% endif %}
+                                        {% if st.getUnite() == "l" %} <option selected value="l">l</option>{% else %} <option value="l">l</option>{% endif %}
+                                        {% if st.getUnite() == "kg" %} <option selected value="kg">kg</option>{% else %} <option value="kg">kg</option>{% endif %}
+                                        {% if st.getUnite() == "g" %} <option selected value="g">g</option>{% else %} <option value="g">g</option>{% endif %}
+                                        
 
                                     </select>
                                 </div>
@@ -50,7 +54,7 @@
                         
                             <div class="form-group">
                                     <label for="contenance">Quantité en stock </label>
-                                    <input required type="number" value="1" class="form-control" name="contenanceStock[]" aria-describedby="contenance" >
+                                    <input required  type="number" value="{{ st.getStock() }}" class="form-control" name="contenanceStock[]" aria-describedby="contenance" >
                             </div>
 
                         </div>
@@ -60,13 +64,16 @@
                         
                             <div class="form-group">
                                     <label for="contenancePrix">Prix </label>
-                                    <input required step="0.01" type="number" value="1" class="form-control" name="contenancePrix[]" aria-describedby="productPrix" >
+                                    <input required step="0.01" type="number" value="{{ st.getPrix() }}" class="form-control" name="contenancePrix[]" aria-describedby="productPrix" >
                             </div>
+                            <a href="#" onclick="delContenance(this)"  class="btn btn-danger btn-sm" style="float: right; margin: 5px;">x</a>
+
                         </div>
                         </div>
                     </div>
                     </div>
                 {% endfor %}
+
                 <div>
                     <a href="#"  id="addContenance" class="btn btn-primary" style="float: right; margin: 5px;">+ Ajouter une contenance</a>
                 </div>

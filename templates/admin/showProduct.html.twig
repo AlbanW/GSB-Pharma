@@ -6,6 +6,7 @@
         <ul class="nav flex-column">
             <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="{{ path('app_admin_show_products') }}">Liste des produits</a>
+                <a class="nav-link active" aria-current="page" href="{{ path('app_admin_affiliation') }}">Affiliation de produit</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
@@ -34,6 +35,7 @@
         <th scope="col">#</th>
         <th scope="col">Nom</th>
         <th scope="col">Catégorie</th>
+        <th scope="col">Produit mis en avant</th>
         <th scope="col">Action</th>
         </tr>
     </thead>
@@ -43,8 +45,21 @@
         <th scope="row">{{ produit.getId() }}</th>
         <td>{{ produit.getNom() }}</td>
         <td>{{ produit.getCategory().getLibelle() }}</td>
+        <td>
+            <center>
+            {% if produit.estEnAvant() %}
+                <i style="color:green;" class="fa-solid fa-check"></i><br>
+                <a href="{{ path('app_admin_updateStatus_product', {id: produit.getId()}) }}" class="edit">Mettre en arrière</a>
+            {% else %}
+                <i style="color:red;" class="fa-solid fa-xmark"></i><br>
+                <a href="{{ path('app_admin_updateStatus_product', {id: produit.getId()}) }}" class="edit">Mettre en avant</a>
+            {% endif %}
+            
+            </center>
+            </td>
         <td style="text-align: center;">
-            <a href="{{ path('app_admin_delete_product', {id: produit.getId()}) }}" class="edit">Supprimer</a><a class="edit" href="{{ path('app_admin_manage_product', {id: produit.getId()}) }}">Gestion stock</a>
+            <a href="{{ path('app_admin_delete_product', {id: produit.getId()}) }}" class="edit">Supprimer</a><br>
+            <a class="edit" href="{{ path('app_admin_manage_product', {id: produit.getId()}) }}">Gestion stock</a>
         </td>
         </tr>
     {% endfor %}

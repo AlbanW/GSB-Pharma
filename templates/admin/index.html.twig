@@ -16,5 +16,51 @@
 {% endblock %}
 
 {% block body %}
-    <div class="card card-body"></div>
+    <div class="card card-body">
+    
+        <h4>Administration : GSB Pharma</h4>
+
+        <br>
+
+        <p>Bienvenue sur le panel d'administration de la boutique GSB Pharma, voici un récapitulatif de vos permissions:</p>
+
+        <br>
+<table class="table">
+    <thead>
+        <tr>
+        <th scope="col">Rôle</th>
+        <th scope="col">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">Salarié</th>
+            <td style="text-align: center;">
+                {% if is_granted('ROLE_SALARIE') %}<i style="color:green;" class="fa-solid fa-check"></i>{% else %}<i style="color:red;" class="fa-solid fa-xmark"></i>{% endif %}
+            </td>
+        </tr>
+
+        <tr>
+            <th scope="row">Gestion des stocks</th>
+            <td style="text-align: center;">
+                {% if is_granted('ROLE_STOCK') %}<i style="color:green;" class="fa-solid fa-check"></i>{% else %}<i style="color:red;" class="fa-solid fa-xmark"></i>{% endif %}
+            </td>
+        </tr>
+
+        <tr>
+            <th scope="row">Gestion des commandes</th>
+            <td style="text-align: center;">
+                {% if is_granted('ROLE_ORDER') %}<i style="color:green;" class="fa-solid fa-check"></i>{% else %}<i style="color:red;" class="fa-solid fa-xmark"></i>{% endif %}
+            </td>
+        </tr>
+
+        <tr>
+            <th scope="row">Administrateur</th>
+            <td style="text-align: center;">
+                {% if is_granted('ROLE_ADMIN') %}<i style="color:green;" class="fa-solid fa-check"></i>{% else %}<i style="color:red;" class="fa-solid fa-xmark"></i>{% endif %}
+            </td>
+        </tr>
+    </tbody>
+    </table>
+    </div>
 {% endblock %}

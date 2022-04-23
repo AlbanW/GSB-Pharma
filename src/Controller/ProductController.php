@@ -25,9 +25,15 @@ class ProductController extends AbstractController
         $produit = $pr->find($id);
         if($produit instanceof Produit)
         {
-    
+            
+            $recc = [];
+            foreach($produit->getRecommandations() as $prod)
+            {
+                $recc[] = $prod->getRecommend();
+            }
             return $this->render('/product/show.html.twig', [
-                'produit' => $produit
+                'produit' => $produit,
+                'recommandations' => $recc
             ]);
         } else {
             $this->addFlash("danger", "Le produit recherché n'existe pas.");

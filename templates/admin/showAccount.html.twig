@@ -1,0 +1,52 @@
+{% extends 'baseAdmin.html.twig' %}
+
+
+{% block menu %}
+    <div class="card card-body">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{{ path('app_admin_show_clients') }}">Liste des clients</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+            </li>
+    
+        </ul>
+    </div>
+{% endblock %}
+
+{% block body %}
+<style>
+    a.edit 
+    {
+        text-decoration: none; 
+        margin-right: 10px;
+    }
+</style>
+    <div class="card card-body">
+
+    <div>
+        </div>
+    <table class="table">
+    <thead>
+        <tr>
+        <th scope="col">#</th>
+        <th scope="col">Nom</th>
+        <th scope="col">Prénom</th>
+        <th scope="col">Rôle(s)</th>
+        <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for client in clients %}
+        <tr>
+        <th scope="row">{{ client.getId() }}</th>
+        <td>{{ client.getNom() }}</td>
+        <td>{{ client.getPrenom() }}</td>
+        <td>{{ client.getRoles()|join(', ') }}</td>
+        <td><a href="{{ path('app_admin_show_client', {id: client.getId()}) }}">Modifier les rôles</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table></div>
+{% endblock %}

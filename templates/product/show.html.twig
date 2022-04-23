@@ -111,11 +111,63 @@ function updatePrice()
                             </form>
 							{% else %}
 								<p style="color:red; font-weight: weight;">Le produit n'est plus en stock.</p>	
+							
+						
 							{% endif %}
 	        			</div>
 	        		</div>
 	        	</div>
-	        </div>
+			<br>
+			{% if recommandations|length > 0 %}
+		    <div class="product-name">
+			Vous aimerez peut-être aussi... <hr>
+				<div class="row">
+							{% for produit in recommandations %}
+									<div class="col-lg-3 col-md-5 mb-3">
+										<div class="card h-100 text-dark">
+										{% if produit.haveStock() == false %}
+											<span class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Rupture de stock</span>
+										{% endif %}
+										<center><img class="card-img-top" style="height: 250px; width: 200px; text-align:center;" src="{{ produit.illustration }}" alt="{{produit.getNom()}}"></center>
+										<div class="card-body">
+											<a style="text-decoration:none; color:black;" href="{{ path('app_product_show', {'id': produit.id }) }}"><h5>{{ produit.nom }}</h5> 
+											
+											</a>
+											<p class="card-text">{{ produit.getResume() }}</p>
+
+													<div class="text-left">
+															à partir de {{ produit.getLowPrice() }} €
+															</div>
+											<br>
+
+											<a href="{{ path('app_product_show', {'id': produit.id }) }}" class="btn btn-sm btn-outline-secondary" href="allocine-details.html">Plus de détails</a>
+										</div>
+										<div class="card-footer">
+										
+											{% if produit.getTotalNotes() > 0 %}
+											<small class="text-muted">
+											{% for i in 0..4 %}
+												{% if produit.getAverageNote() > i %}
+												<span class="star" style="color:gold;">★</span>
+												{% else %}
+												<span class="star" style="color:grey;">★</span>
+												{% endif %}
+											{% endfor %}
+											({{produit.getTotalNotes}})
+											</small>
+											{% else %}
+											<small>Aucun avis</small>
+											{% endif %}
+
+										</div>
+										</div>
+									</div>
+									
+					{% endfor %}
+							{% endif %}
+			</div><div>
+			
+			</div>
 	        <div class="product-info-tabs">
 		     
 				<div class="card text-white" style="background-color: #353c46;">
@@ -159,6 +211,9 @@ function updatePrice()
                         {% endif %}
 				  	</div>
 				  	
+</div>
+</div>
+</div>
 				<br>
 				<div class="container">
 					{% for note in produit.getNotes() %}

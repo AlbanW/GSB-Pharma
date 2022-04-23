@@ -1,0 +1,68 @@
+{% extends 'baseAdmin.html.twig' %}
+
+
+{% block menu %}
+    <div class="card card-body">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{{ path('app_admin_show_clients') }}">Liste des clients</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+            </li>
+    
+        </ul>
+    </div>
+{% endblock %}
+
+{% block body %}
+
+
+
+
+    <div class="card card-body">
+        <h4>Modification des rôles de {{ client.getNom()|upper }} {{ client.getPrenom() }}</h4>
+        <hr>
+        <form action="#" method="post">
+
+            <div class="form-check form-switch">
+                {% if client.haveRole('ROLE_ADMIN') %}
+                    <input class="form-check-input" name="admin" type="checkbox"  checked role="switch" id="flexSwitchCheckDefault">
+                {% else %}
+                    <input class="form-check-input" name="admin" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                {% endif %}
+                <label class="form-check-label"  for="flexSwitchCheckDefault">L'utilisateur est un administrateur</label>
+            </div>
+            <br>
+            <div class="form-check form-switch">
+                {% if client.haveRole('ROLE_SALARIE') %}
+                    <input class="form-check-input" name="salarie" type="checkbox"  checked role="switch" id="flexSwitchCheckDefault">
+                {% else %}
+                    <input class="form-check-input" name="salarie" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                {% endif %}
+                <label class="form-check-label"  for="flexSwitchCheckDefault">L'utilisateur est un salarié</label>
+            </div>
+            <br>
+            <div class="form-check form-switch">
+                {% if client.haveRole('ROLE_STOCK') %}
+                    <input class="form-check-input" name="stockManager" type="checkbox"  checked role="switch" id="flexSwitchCheckDefault">
+                {% else %}
+                    <input class="form-check-input" name="stockManager" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                {% endif %}
+                <label class="form-check-label"  for="flexSwitchCheckDefault">Le salarié peut gérer les stocks</label>
+            </div>
+            <br>
+
+            <div class="form-check form-switch">
+                {% if client.haveRole('ROLE_ORDER') %}
+                    <input class="form-check-input" name="orderManager" type="checkbox"  checked role="switch" id="flexSwitchCheckDefault">
+                {% else %}
+                    <input class="form-check-input" name="orderManager" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                {% endif %}
+                <label class="form-check-label" for="flexSwitchCheckDefault">Le salarié peut gérer les commandes</label>
+            </div>
+            <br>
+            <input type="submit" value="Modifier" name="editRole" class="btn btn-success btn-sm">
+        </form>
+   </div><br><br>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+
+<style>
+
+.background {
+   background-image: linear-gradient(
+      rgba(255, 255, 255, 0.3), 
+      rgba(255, 255, 255, 0.4)
+    ),
+    url(https://eskipaper.com/images/nature-background-3.jpg);
+    background-position: center;
+
+}
+
+.leadFont {
+    color:#343a40;
+}
+</style>
+<br><br>
+
+{% include '/base/flash.html.twig' %}
+<div class="container">
+<div class="card card-body">
+    <h3 style="color: #343a40">Commande validé !</h3>
+    <h5 style="color: #343a40;">Nous vous remercions pour votre confiance <span style="color:pink;">♥</span> !</h5>
+    <br>
+    <div class="alert alert-success">
+        <b>{{ 'é'|upper }}tape a suivre:</b>
+        <ul>
+            <li>Accéder aux statuts de vos commandes <a href="{{ path('app_order') }}">ici</a></li>
+            <li>Attendre que nos équipes prennent en charge votre commande</li>
+        </ul>
+    
+    </div>
+</div>
+
+
+<br><br><br><br><br>
+</div>
+
+{% endblock %}

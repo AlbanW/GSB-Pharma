@@ -246,6 +246,28 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
+    public function haveRole($string)
+    {
+        foreach($this->roles as $role)
+        {
+            if($role == $string) return true;
+        }
+        return false;
+    }
+
+    public function updateRole($admin, $order, $stock, $salarie): self
+    {
+        $role = [];
+        $role[] = 'ROLE_USER';
+        if($admin == 1) $role[] = 'ROLE_ADMIN';
+        if($salarie == 1) $role[] = 'ROLE_SALARIE';
+        if($order == 1) $role[] = 'ROLE_ORDER';
+        if($stock == 1) $role[] = 'ROLE_STOCK';
+
+        $this->roles = $role;
+        return $this;
+    }
+
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
@@ -283,6 +305,16 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     public function getCommandes(): Collection
     {
         return $this->commandes;
+    }
+
+    public function countCommandes() : ?int 
+    {
+        $count = 0;
+        foreach($this->commandes as $commande)
+        {
+            if($commande->getStatus() == 1 || $commande->getStatus() == 0) $count++;
+        }
+        return $count;
     }
 
     public function addCommande(Commande $commande): self

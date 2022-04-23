@@ -36,12 +36,20 @@ class Produit
     #[ORM\OneToMany(mappedBy: 'produit', targetEntity: Contenance::class, cascade:["persist", "remove"] )]
     private $contenances;
 
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $enAvant;
+
+    #[ORM\OneToMany(mappedBy: 'produit', targetEntity: Recommandation::class)]
+    private $recommandations;
+
+
 
 
     public function __construct()
     {
         $this->notes = new ArrayCollection();
         $this->contenances = new ArrayCollection();
+        $this->recommandations = new ArrayCollection();
     }
 
 
@@ -217,6 +225,64 @@ class Produit
         return $this;
     }
 
+    public function removeContenances(): self
+    {
+        foreach($this->getContenances() as $contenance)
+        {
+            if ($this->contenances->removeElement($contenance)) {
+                if ($contenance->getProduit() === $this) {
+                    $contenance->setProduit(null);
+                }
+            }
+        }
+        return $this;
+    }
+
+    public function estEnAvant()
+    {
+        return ($this->enAvant == true);
+    }
+    public function getEnAvant(): ?bool
+    {
+        return $this->enAvant;
+    }
+
+    public function setEnAvant(?bool $enAvant): self
+    {
+        $this->enAvant = $enAvant;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Recommandation>
+     */
+    public function getRecommandations(): Collection
+    {
+        return $this->recommandations;
+    }
+
+    public function addRecommandation(Recommandation $recommandation): self
+    {
+        if (!$this->recommandations->contains($recommandation)) {
+            $this->recommandations[] = $recommandation;
+            $recommandation->setProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecommandation(Recommandation $recommandation): self
+    {
+        if ($this->recommandations->removeElement($recommandation)) {
+            // set the owning side to null (unless already changed)
+            if ($recommandation->getProduit() === $this) {
+                $recommandation->setProduit(null);
+            }
+        }
+
+        return $this;
+    }
 
 
 

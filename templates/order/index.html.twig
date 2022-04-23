@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+<br><br>
+{% include 'base/flash.html.twig' %}
+
+<div class="container">
+    <div class="card card-body bg-dark text-white">
+    
+        <h1 class="display-4" style="font-size: 1.5em; margin: 0; padding:0;">Vos commandes</h1><br><hr style="color:white; margin: 5px; padding:0;">
+
+        <br>
+        <p><quote>
+        *Les dates et informations de livraison sont affichées sur le récapitulatif de la commande dés que celles-ci sont disponible. N'hésitez pas à jeter un coup d'oeil régulièrement
+        </quote></p>
+    <hr>
+    <br>
+<table class="table table-dark">
+
+  <tbody>
+
+    {% for order in app.user.getCommandes() %}
+        <tr>
+        <td>
+            #{{ order.getId() }}
+        </td>
+        <td>
+          {% if order.getStatus() == 0 %}<span class="badge badge-primary">En cours de traitement</span>{% endif %}
+          {% if order.getStatus() == 1 %}<span class="badge badge-warning">En cours de livraison</span>{% endif %}
+          {% if order.getStatus() == 2 %}<span class="badge badge-success">Livré.</span>{% endif %}
+          {% if order.getStatus() == 3 %}<span class="badge badge-danger">Remboursement</span>{% endif %}
+        </td>
+        <td>
+            {% for produit in order.getCommandeProduits() %}
+                <p>{{ produit.getContenance().getProduit().getNom() }} x {{ produit.getQuantite() }}</p>
+            {% endfor %}
+        </td>
+        <td>
+            <p><a href="{{ path('app_order_sum', {'id': order.getId()}) }}" class="btn btn-primary btn-sm">Récapitulatif</a></p>
+        </td>
+        </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+    {% if app.user.countCommandes() == 0 %}
+        <div class="alert alert-danger">Vous n'avez aucune commande.</div>
+    {% endif %}
+    </div>
+</div>
+<br><br>
+
+{% endblock %}

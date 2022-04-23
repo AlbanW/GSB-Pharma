@@ -22,9 +22,13 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(MarqueRepository $marque): Response
     {
+        $produit = $this->produitRepository->findRecent();
+        $enAvant = $this->produitRepository->findPromoted();
+        
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
-            'products' => $this->produitRepository->findAll(),
+            'products' => $produit,
+            'enAvant' => $enAvant,
             'marques' => $marque->findAll()
         ]);
     }
