@@ -45,22 +45,28 @@ class CommandeRepository extends ServiceEntityRepository
         }
     }
 
-    // /**
-    //  * @return Commande[] Returns an array of Commande objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+    * @return Commande[] Returns an array of Commande objects
+    */
+    
+    public function findByYear($month, $year)
     {
+        $startDate = \DateTime::createFromFormat('d-n-Y', "01-".$month."-".$year);
+        $startDate->setTime(0, 0 ,0);
+
+        $endDate = \DateTime::createFromFormat('d-n-Y', "31-".$month."-".$year);
+        $endDate->setTime(0, 0, 0);
+
         return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
+            ->select('count(c.id)')
+            ->andWhere('c.dateCommande BETWEEN :start AND :end')
+            ->setParameter(':start', $startDate)
+            ->setParameter(':end', $endDate)
             ->getQuery()
-            ->getResult()
+            ->getResult();
         ;
     }
-    */
+    
 
     /*
     public function findOneBySomeField($value): ?Commande

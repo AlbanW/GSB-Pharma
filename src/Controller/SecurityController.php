@@ -76,7 +76,7 @@ class SecurityController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            if($user->getAcceptCgu()) {
+            if($user->acceptCgu()) {
             $user->setPassword(
             $userPasswordHasher->hashPassword(
                     $user,

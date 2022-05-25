@@ -30,6 +30,7 @@ class Commande
     #[ORM\Column(type: 'date', nullable: true)]
     private $dateLivraison;
 
+
     public function __construct()
     {
         $this->commandeProduits = new ArrayCollection();

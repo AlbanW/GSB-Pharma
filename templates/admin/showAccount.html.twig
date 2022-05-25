@@ -43,7 +43,11 @@
         <th scope="row">{{ client.getId() }}</th>
         <td>{{ client.getNom() }}</td>
         <td>{{ client.getPrenom() }}</td>
-        <td>{{ client.getRoles()|join(', ') }}</td>
+        <td>
+            {% for str in client.getRoles() %}
+                <span class="badge badge-primary bg-dark">{{ str }}</span>
+            {% endfor %}
+        </td>
         <td><a href="{{ path('app_admin_show_client', {id: client.getId()}) }}">Modifier les rôles</a></td>
         </tr>
     {% endfor %}

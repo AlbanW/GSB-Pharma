@@ -127,7 +127,6 @@ class ProductController extends AbstractController
             $stock = $stock->getStock();
 
             $crr  = $cr->find($id)->getPrix();
-
         return new JsonResponse(array(
             'status' => 'Prix',
             'message' => [$crr,$stock]),

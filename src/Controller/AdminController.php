@@ -2,23 +2,27 @@
 
 namespace App\Controller;
 
-use App\Entity\Contenance;
 use App\Entity\Produit;
+use App\Entity\Contenance;
+use App\Service\FileUploader;
 use App\Entity\Recommandation;
-use App\Repository\CategorieRepository;
+use Doctrine\ORM\EntityManager;
+use App\Service\Form\FormService;
 use App\Repository\ClientRepository;
-use App\Repository\ContenanceRepository;
 use App\Repository\MarqueRepository;
 use App\Repository\ProduitRepository;
-use App\Repository\RecommandationRepository;
-use App\Service\FileUploader;
-use App\Service\Form\FormService;
-use Doctrine\ORM\EntityManager;
+use App\Repository\CommandeRepository;
+use App\Repository\CategorieRepository;
+use App\Repository\ContenanceRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\RecommandationRepository;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[IsGranted('ROLE_SALARIE', statusCode: 404, message: 'Page not found')]
 class AdminController extends AbstractController
@@ -31,7 +35,127 @@ class AdminController extends AbstractController
         ]);
     }
 
-    
+    #[Route('/admin/ajax', methods: ['POST'], name:'app_admin_ajax')]
+    public function ajax(Request $request, CommandeRepository $cr) :JsonResponse
+    {
+        $year = $request->request->get('year');
+        if(strlen($year) == 4)
+        {
+            $data = [
+                $cr->findByYear("01", $year)[0][1],
+                $cr->findByYear("02", $year)[0][1],
+                $cr->findByYear("03", $year)[0][1],
+                $cr->findByYear("04", $year)[0][1],
+                $cr->findByYear("05", $year)[0][1],
+                $cr->findByYear("06", $year)[0][1],
+                $cr->findByYear("07", $year)[0][1],
+                $cr->findByYear("08", $year)[0][1],
+                $cr->findByYear("09", $year)[0][1],
+                $cr->findByYear("10", $year)[0][1],
+                $cr->findByYear("11", $year)[0][1],
+                $cr->findByYear("12", $year)[0][1]
+            ];
+            return new JsonResponse(array(
+                'status' => 'Prix',
+                'message' => [
+                    $year,
+                    $data
+                ]),
+            200);
+        }
+    }
+
+    #[Route('/admin/stats/{year}', name: 'app_admin_stats')]
+    public function statistics(int $year = 2022, CommandeRepository $cr): Response
+    {
+        if(isset($_POST['submitDate']))
+        {
+            if(isset($_POST['date']))
+            {
+                return $this->redirectToRoute('app_admin_stats', ['year' => $_POST['date']]);
+            }
+        }
+
+        $count = $cr->findByYear("01", $year)[0][1] +
+        $cr->findByYear("02", $year)[0][1] +
+        $cr->findByYear("03", $year)[0][1] +
+        $cr->findByYear("04", $year)[0][1] +
+        $cr->findByYear("05", $year)[0][1] +
+        $cr->findByYear("06", $year)[0][1] +
+        $cr->findByYear("07", $year)[0][1] +
+        $cr->findByYear("08", $year)[0][1] +
+        $cr->findByYear("09", $year)[0][1] +
+        $cr->findByYear("10", $year)[0][1] +
+        $cr->findByYear("11", $year)[0][1] +
+        $cr->findByYear("12", $year)[0][1];
+
+        $years = [];
+        
+        foreach($cr->findAll() as $com)
+        {
+            if(!array_key_exists($com->getDateCommande()->format('Y'), $years))  array_push($years, $com->getDateCommande()->format('Y'));
+        }
+        $years = array_unique($years);
+
+        return $this->render('admin/statistics.html.twig', [
+            'controller_name' => 'AdminController',
+            'year' => $year,
+            'actualDate' => date('Y'),
+            'years' => $years,
+            'count' => $count
+        ]);
+    }
+  
+    #[IsGranted('ROLE_ORDER', statusCode: 404, message: 'Page not found')]
+    #[Route('/admin/orders', name: 'app_admin_show_orders')]
+    public function showOrders(CommandeRepository $cr)
+    {
+        $commandes = $cr->findAll();
+        return $this->render('admin/showOrders.html.twig', [
+            'commandes' => $commandes
+        ]);
+    }
+
+    #[IsGranted('ROLE_ORDER', statusCode: 404, message: 'Page not found')]
+    #[Route('/admin/order/{id}', name: 'app_admin_manage_order')]
+    public function showOrder(int $id, CommandeRepository $cr, EntityManagerInterface $em)
+    {
+        if($cr->find($id))
+        {
+            $commande = $cr->find($id);
+
+            if(isset($_POST['changeState']))
+            {
+                if(isset($_POST['selectState']))
+                { 
+                    dump("oui2");
+                    $statut = $_POST['selectState'];
+                    if(FormService::isset('dateState')) {
+                        $date = new \DateTime($_POST['dateState']);
+                        $commande->setDateLivraison($date);
+                    }
+                    $commande->setStatus($statut);
+
+                    $em->persist($commande);
+                    $em->flush();
+                    return $this->redirectToRoute('app_admin_show_orders');
+                }
+            }
+
+            if($commande->getDateLivraison() != null)
+            {
+                $date = $commande->getDateLivraison()->format('d-m-Y');
+            } else {
+                $date = date("d-m-Y");
+            }
+            return $this->render('admin/manageOrder.html.twig', [
+                'commande' => $commande,
+                'statut' => $commande->getStatus(),
+                'dateLivraison' => $date
+            ]);
+        }
+    }
+
     #[IsGranted('ROLE_STOCK', statusCode: 404, message: 'Page not found')]
     #[Route('/admin/products', name: 'app_admin_show_products')]
     public function showProduct(ProduitRepository $pr)

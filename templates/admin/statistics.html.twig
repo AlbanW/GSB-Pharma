@@ -1,0 +1,108 @@
+{% extends 'baseAdmin.html.twig' %}
+
+
+{% block menu %}
+    <div class="card card-body">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{{ path('app_admin_stats') }}">Statistiques</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+            </li>
+    
+        </ul>
+    </div>
+{% endblock %}
+
+{% block body %}
+
+
+
+
+<div class="card card-body">
+
+  <form action="{{ path('app_admin_stats', {'year': year}) }}" method="post">
+    <div class="row">
+        <div class="col">
+            <select name="date" class="form-control" id="">
+                {% for yr in years %}
+                    <option value="{{yr}}">{{yr}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col">
+            <input class="btn btn-secondary" type="submit" name="submitDate" style="margin: 1px;" value="Chercher">
+        </div>
+    </div>
+  </form>
+  <br>
+  <h3 style="color: #343a40;">Nombre de commande en {{ year }}</h3>
+  <h6 style="color: #343a40;">Il y a eu au total {{ count }} commande(s) durant {{ year }}</h3>
+
+<hr>   
+
+<br>
+
+<canvas id="myChart" width="400" height="300"></canvas>
+<script>
+    var currentURL = $(location).attr('href'); 
+    var currentURL = window.location.href;
+    var url = currentURL.split('/');
+    var year = 2022;
+    if (url[5] != null)
+    {
+        if($.isNumeric(url[5]))  {
+            year = url[5];
+        }
+    }
+    $.ajax({
+        type: "POST",
+        url: "{{ path('app_admin_ajax') }}",
+        data: {'year': year}
+    }).done(function(data){
+        var year = data['message'][0];
+        var data = data['message'][1];
+
+const ctx = document.getElementById('myChart').getContext('2d');
+const myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+        datasets: [{
+            label: 'Nombre de commandes durant le mois',
+            data: data,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+    });
+
+</script>
+ 
+    </div>
+<br>
+{% endblock %}

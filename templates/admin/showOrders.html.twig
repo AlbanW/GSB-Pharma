@@ -1,0 +1,57 @@
+{% extends 'baseAdmin.html.twig' %}
+
+
+{% block menu %}
+    <div class="card card-body">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{{ path('app_admin_show_orders') }}">Liste des commandes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+            </li>
+    
+        </ul>
+    </div>
+{% endblock %}
+
+{% block body %}
+<style>
+    a.edit 
+    {
+        text-decoration: none; 
+        margin-right: 10px;
+    }
+</style>
+    <div class="card card-body">
+
+    <table class="table">
+    <thead>
+        <tr>
+        <th scope="col">#</th>
+        <th scope="col">Client</th>
+        <th scope="col">Date de la commande</th>
+        <th scope="col">Statut de la commande</th>
+        <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for commande in commandes %}
+        <tr>
+        <th scope="row">{{ commande.getId() }}</th>
+        <td>{{ commande.getClient().getNom()|upper }} {{ commande.getClient().getPrenom() }}</td>
+        <td>{{ commande.getDateCommande() | date('d-m-Y') }}</td>
+        <td>
+          {% if commande.getStatus() == 0 %}<span class="badge badge-primary bg-primary">En cours de traitement</span>{% endif %}
+          {% if commande.getStatus() == 1 %}<span class="badge badge-warning bg-warning">En cours de livraison</span>{% endif %}
+          {% if commande.getStatus() == 2 %}<span class="badge badge-success bg-success">Livré.</span>{% endif %}
+          {% if commande.getStatus() == 3 %}<span class="badge badge-danger bg-danger">Remboursement</span>{% endif %}
+        </td>
+        <td style="text-align: center;">
+            <a href="{{ path('app_admin_manage_order', {id: commande.getId()}) }}" class="edit">Gérer la commande</a>
+        </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table></div>
+{% endblock %}

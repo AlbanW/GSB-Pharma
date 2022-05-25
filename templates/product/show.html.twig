@@ -79,8 +79,7 @@ function updatePrice()
 								<span>{{ produit.getTotalNotes() }} avis</span>
 							</div>
 		        		</div><br>
-	        			<p>{{produit.getDescription()}}
-						J'aime les hommes</p>
+	        			<p>{{produit.getDescription()}}</p>
 	        			{% if produit.haveStock() == true %}
                         <form action="{{ path('app_cart_add') }}" method="post">
 	        			<div class="row">  
@@ -92,7 +91,7 @@ function updatePrice()
 
                                     {% for stock in produit.getContenances() %}
 										{% if stock.getStock() > 0 %}
-									    <option value="{{ stock.getId() }}">{{ stock.getQuantite()}} {{stock.getUnite() }}</option>
+									    	<option value="{{ stock.getId() }}">{{ stock.getQuantite()}} {{stock.getUnite() }}</option>
 										{% endif %}
 								    {% endfor %}
 								</select>
@@ -170,7 +169,7 @@ function updatePrice()
 			</div>
 	        <div class="product-info-tabs">
 		     
-				<div class="card text-white" style="background-color: #353c46;">
+				<div class="card text-white" style="color:white; background-color: #353c46;">
 				  	<div class="card-body " >
                         {% if app.user %} 
                             <div>
@@ -221,7 +220,7 @@ function updatePrice()
 						<div class="row">
 						<div class="col-sm-3" style="text-align: center;">
 							<img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" style="width: 100px; height: 100px;" class="img-rounded">
-							<div class="review-block-name">{{ note.getIdClient().getPrenom() }}</div>
+							<div class="review-block-name" style="color:white;">{{ note.getIdClient().getPrenom() }}</div>
 						</div>
 						<div class="col-sm-9">
 							<div class="review-block-rate">
@@ -234,7 +233,7 @@ function updatePrice()
 								{% endfor %}
 							</div>
 							<br>
-							<div class="review-block-description">{{ note.getAvis() }}</div>
+							<div class="review-block-description" style="color:white;">{{ note.getAvis() }}</div>
 						</div>
 					</div>
 				</div>
